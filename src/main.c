@@ -56,7 +56,7 @@ int main(int argc, char* argv[]) {
 	}
 	for (tthread = 0; tthread < THREADS; ++tthread) {
 		printf("Starting thread %d\n", tthread);
-		pthread_join(thread_pool[tthread], NULL);
+		pthread_detach(thread_pool[tthread]);
 	}
 	getchar();
 };
