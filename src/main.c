@@ -6,12 +6,13 @@
 
 #include "request.h"
 #define THREADS 50 // Number of threads to use
-#define LOG_PID NULL // When enabled, the current PID will be logged
+#define LOG_PID 1 // When enabled, the current PID will be logged
 
 char const digits[] = "0123456789";
 char* pid;
 pthread_t thread_pool[THREADS];
 static int using_long_pid = NULL;
+pthread_mutex_t lock;
 
 void prepend(char* s, const char* t) {
     size_t len = strlen(t);
