@@ -12,6 +12,7 @@ char const digits[] = "0123456789";
 char* pid;
 pthread_t thread_pool[THREADS];
 static int using_long_pid = NULL;
+static int pid_len = 4;
 pthread_mutex_t lock;
 
 void prepend(char* s, const char* t) {
@@ -26,13 +27,10 @@ char* get_pid(char* pid) {
 	int ipid = atoi(pid);
 	++ipid;
 	sprintf(pid, "%d", ipid);
-	int pid_len = 4;
-	if (ipid > 9999) {
+	if (ipid > 9999 && !using_long_pid) {
 		pid_len = 7; // PIDs are only 4 or 7 characters in length
-		if (!using_long_pid) {
-			printf("Tested all the four digit PIDs. Switching to seven digit.\n");
-			using_long_pid = 1;
-		}
+		printf("Tested all the four digit PIDs. Switching to seven digit.\n");
+		using_long_pid = 1;
 	}
 	while (strlen(pid) < pid_len) {
 		prepend(pid, "0");
@@ -44,7 +42,7 @@ void* thread_callback(void* vargp) {
 	pthread_mutex_lock(&lock);
 	pid = get_pid(pid);
 	pthread_mutex_unlock(&lock);
-	
+
 	if (LOG_PID) printf("%s\n", pid);
 	req* r = init_request();
 	char* res = request_kahoot_token(r, pid);
