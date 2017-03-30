@@ -29,7 +29,7 @@ char* get_pid(char* pid) {
 	if (ipid > 9999) {
 		pid_len = 7; // PIDs are only 4 or 7 characters in length
 		if (!using_long_pid) {
-			printf("Tested all the four digit PIDs. Switching to seven digit.\n")
+			printf("Tested all the four digit PIDs. Switching to seven digit.\n");
 			using_long_pid = 1;
 		}
 	}
