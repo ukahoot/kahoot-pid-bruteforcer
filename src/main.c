@@ -41,7 +41,10 @@ char* get_pid(char* pid) {
 };
 
 void* thread_callback(void* vargp) {
+	pthread_mutex_lock(&lock);
 	pid = get_pid(pid);
+	pthread_mutex_unlock(&lock);
+	
 	if (LOG_PID) printf("%s\n", pid);
 	req* r = init_request();
 	char* res = request_kahoot_token(r, pid);
@@ -57,6 +60,10 @@ int main(int argc, char* argv[]) {
 	printf("Starting PID bruteforce...\n");
 	pid = malloc(9);
 	strcpy(pid, "0000000");
+	if (pthread_mutex_init(&lock, NULL) != 0) {
+        printf("Failed to create mutex lock, exiting..\n");
+        return 1;
+    }
 	int tthread = 0;
 	for (; tthread < THREADS; ++tthread) {
 		pthread_create(&thread_pool[tthread], NULL, &thread_callback, NULL);
