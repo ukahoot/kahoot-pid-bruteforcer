@@ -5,7 +5,7 @@
 #include <pthread.h>
 
 #include "request.h"
-#define THREADS 10
+#define THREADS 50 // Number of threads to use
 
 char const digits[] = "0123456789";
 void prepend(char* s, const char* t) {
@@ -20,13 +20,17 @@ char* get_pid(char* pid) {
 	int ipid = atoi(pid);
 	++ipid;
 	sprintf(pid, "%d", ipid);
-	while (strlen(pid) < 4) {
+	int pid_len = 4;
+	if (ipid > 9999) {
+		pid_len = 7; // PIDs are only 4 or 7 characters in length
+	}
+	while (strlen(pid) < pid_len) {
 		prepend(pid, "0");
 	}
 	return pid;
 };
 char* pid;
-pthread_t thread_pool[25];
+pthread_t thread_pool[THREADS];
 
 void* thread_callback(void* vargp) {
 	pid = get_pid(pid);
@@ -42,13 +46,14 @@ void* thread_callback(void* vargp) {
 };
 int main(int argc, char* argv[]) {
 	setup_openssl();
+	printf("Starting PID bruteforce...\n");
 	pid = malloc(9);
 	strcpy(pid, "0000000");
-	int pool_size = sizeof(pthread_t) * THREADS;
 	int tthread = 0;
-	while (tthread < pool_size) {
+	while (tthread < THREADS) {
+		printf("Starting thread %d\n", tthread);
 		pthread_create(&thread_pool[tthread], NULL, &thread_callback, NULL);
-		pthread_join(thread_pool[tthread], NULL);
+		pthread_detach(thread_pool[tthread], NULL);
 		tthread++;
 	}
 	getchar();
