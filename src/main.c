@@ -50,11 +50,12 @@ int main(int argc, char* argv[]) {
 	pid = malloc(9);
 	strcpy(pid, "0000000");
 	int tthread = 0;
-	while (tthread < THREADS) {
-		printf("Starting thread %d\n", tthread);
+	for (; tthread < THREADS; ++tthread) {
 		pthread_create(&thread_pool[tthread], NULL, &thread_callback, NULL);
-		pthread_detach(thread_pool[tthread], NULL);
-		tthread++;
+	}
+	for (tthread = 0; tthread < THREADS; ++tthread) {
+		printf("Starting thread %d\n", tthread);
+		pthread_join(thread_pool[tthread], NULL);
 	}
 	getchar();
 };
