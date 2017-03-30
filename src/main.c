@@ -9,6 +9,10 @@
 #define LOG_PID NULL // When enabled, the current PID will be logged
 
 char const digits[] = "0123456789";
+char* pid;
+pthread_t thread_pool[THREADS];
+static int using_long_pid = NULL;
+
 void prepend(char* s, const char* t) {
     size_t len = strlen(t);
     size_t i;
@@ -24,14 +28,16 @@ char* get_pid(char* pid) {
 	int pid_len = 4;
 	if (ipid > 9999) {
 		pid_len = 7; // PIDs are only 4 or 7 characters in length
+		if (!using_long_pid) {
+			printf("Tested all the four digit PIDs. Switching to seven digit.\n")
+			using_long_pid = 1;
+		}
 	}
 	while (strlen(pid) < pid_len) {
 		prepend(pid, "0");
 	}
 	return pid;
 };
-char* pid;
-pthread_t thread_pool[THREADS];
 
 void* thread_callback(void* vargp) {
 	pid = get_pid(pid);
