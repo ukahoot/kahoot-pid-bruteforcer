@@ -11,8 +11,8 @@
 char const digits[] = "0123456789";
 char* pid;
 pthread_t thread_pool[THREADS];
-static int using_long_pid = NULL;
-static int pid_len = 4;
+static int using_short_pid = NULL;
+static int pid_len = 7;
 pthread_mutex_t lock;
 
 void prepend(char* s, const char* t) {
@@ -27,10 +27,10 @@ char* get_pid(char* pid) {
 	int ipid = atoi(pid);
 	++ipid;
 	sprintf(pid, "%d", ipid);
-	if (ipid > 9999 && !using_long_pid) {
-		pid_len = 7; // PIDs are only 4 or 7 characters in length
+	if (ipid > 9999999 && !using_short_pid) {
+		pid_len = 4; // PIDs are only 4 or 7 characters in length
 		printf("Tested all the four digit PIDs. Switching to seven digit.\n");
-		using_long_pid = 1;
+		using_short_pid = 1;
 	}
 	while (strlen(pid) < pid_len) {
 		prepend(pid, "0");
