@@ -2,8 +2,10 @@
 #include <stdlib.h>
 #include <string.h>
 #include <errno.h>
+#include <pthread.h>
 
 #include "request.h"
+#define THREADS 10
 
 char const digits[] = "0123456789";
 void prepend(char* s, const char* t) {
@@ -24,7 +26,17 @@ char* get_pid(char* pid) {
 	return pid;
 };
 char* pid;
+pthread_t thread_pool[25];
 
+void* thread_callback(void* vargp) {
+	// TODO: Handle thread callback
+};
 int main(int argc, char* argv[]) {
-	//
+	int pool_size = sizeof(pthread_t) * THREADS;
+	int tthread = 0;
+	while (tthread < pool_size) {
+		pthread_create(&thread_pool[tthread], NULL, &thread_callback, NULL);
+		pthread_join(thread_pool[tthread], NULL);
+		tthread++;
+	}
 };
