@@ -29,9 +29,20 @@ char* pid;
 pthread_t thread_pool[25];
 
 void* thread_callback(void* vargp) {
-	// TODO: Handle thread callback
+	pid = get_pid(pid);
+	printf("%s\n", pid);
+	req* r = init_request();
+	char* res = request_kahoot_token(r, pid);
+	if (res != NULL) {
+		printf("Discovered Kahoot PID: %s\n", pid);
+	}
+	request_free(r);
+	free(res);
+	thread_callback(vargp);
 };
 int main(int argc, char* argv[]) {
+	pid = malloc(9);
+	strcpy(pid, "0000000");
 	int pool_size = sizeof(pthread_t) * THREADS;
 	int tthread = 0;
 	while (tthread < pool_size) {
@@ -39,4 +50,5 @@ int main(int argc, char* argv[]) {
 		pthread_join(thread_pool[tthread], NULL);
 		tthread++;
 	}
+	getchar();
 };
