@@ -6,7 +6,7 @@
 
 #include "request.h"
 #define THREADS 50 // Number of threads to use
-#define LOG_PID 1 // When enabled, the current PID will be logged
+#define LOG_PID NULL // When enabled, the current PID will be logged
 
 char const digits[] = "0123456789";
 char* pid;
@@ -43,7 +43,7 @@ void* thread_callback(void* vargp) {
 	pid = get_pid(pid);
 	pthread_mutex_unlock(&lock);
 
-	if (LOG_PID) printf("%s\n", pid);
+	if (LOG_PID) printf("Trying PID %s\n", pid);
 	req* r = init_request();
 	char* res = request_kahoot_token(r, pid);
 	if (res != NULL) {
