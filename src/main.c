@@ -41,6 +41,7 @@ void* thread_callback(void* vargp) {
 	thread_callback(vargp);
 };
 int main(int argc, char* argv[]) {
+	setup_openssl();
 	pid = malloc(9);
 	strcpy(pid, "0000000");
 	int pool_size = sizeof(pthread_t) * THREADS;
