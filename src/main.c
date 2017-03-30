@@ -58,5 +58,6 @@ int main(int argc, char* argv[]) {
 		printf("Starting thread %d\n", tthread);
 		pthread_detach(thread_pool[tthread]);
 	}
+	printf("Press enter to terminate\n");
 	getchar();
 };
